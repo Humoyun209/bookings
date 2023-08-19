@@ -12,4 +12,3 @@ class Rooms(Base):
     price = Column(Integer, nullable=False)
     services = Column(JSON)
     quantity = Column(Integer, nullable=False)
-    image_id = Column(Integer, nullable=False)
