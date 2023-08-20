@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.rooms.dao import RoomsDAO
+from app.hotels.rooms.dao import RoomsDAO
 
 router = APIRouter(prefix='/rooms', tags=['Комнаты'])
 

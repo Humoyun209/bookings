@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.bookings.router import router as bookings_router
 from app.users.router import router as users_router
 from app.hotels.router import router as hotels_router
-from app.rooms.router import router as rooms_roter
+from app.hotels.rooms.router import router as rooms_roter
 from app.hotels.images.router import router as images_router
 
 from fastapi_cache import FastAPICache

@@ -1,12 +1,14 @@
 from datetime import date
 
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 from fastapi import status
 
 from app.bookings.models import Bookings
 from app.dao.base import BaseDAO
 from app.database import async_session_maker
-from app.rooms.models import Rooms
+from app.hotels.models import Hotels
+from app.hotels.rooms.dao import RoomsDAO
+from app.hotels.rooms.models import Rooms
 
 from sqlalchemy import between, func, or_, select, and_
 
@@ -20,9 +22,10 @@ def get_left_rooms(date_from: date, date_to: date):
                 )).group_by(Rooms.id).order_by(Rooms.id).cte('left_rooms')
 
 
-class BokingsDAO(BaseDAO):
+class BookingsDAO(BaseDAO):
     """Data axios object for Bookings"""
     model = Bookings
+    
     @classmethod
     async def create_booking_db(cls, date_from: date, date_to: date, room_id: int, user_id: int) -> Bookings:
         async with async_session_maker() as session:
@@ -51,3 +54,12 @@ class BokingsDAO(BaseDAO):
                 raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
                                     detail='Все комнаты заняты')
             return booking
+        
+    @classmethod
+    async def update_booking(cls, booking_id: int, date_from: date = None, date_to: date = None, room_id: int = None):
+        async with async_session_maker() as session:
+            booking = await cls.get_one_data(model_id=booking_id)
+            room = await RoomsDAO.get_one_data(model_id=booking.room_id)
+            query = select(Hotels).where(Hotels.id == room.hotel_id)
+            hotel = await session.execute(query)
+            return hotel.scalar_one_or_none()

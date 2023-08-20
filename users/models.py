@@ -9,3 +9,5 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     email = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
+    
+    bookings = relationship('Bookings', backref='user')
