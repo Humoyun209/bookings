@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.bookings.dao import BookingsDAO
@@ -36,9 +37,9 @@ async def delete_booking(booking_id: int):
 
 
 @router.put('/update_booking/{booking_id}')
-async def update_boking(booking_id: int):
+async def update_boking(booking_id: int, date_from: Optional[date] = None, date_to: Optional[date] = None):
     boking = await BookingsDAO.get_one_data(model_id=booking_id)
     if boking is not None:
-        return await BookingsDAO.update_booking(booking_id=booking_id)
+        return await BookingsDAO.update_booking(booking_id=booking_id, date_from=date_from, date_to=date_to)
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail='Обьект не найден')
