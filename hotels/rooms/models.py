@@ -14,4 +14,8 @@ class Rooms(Base):
     services = Column(JSON)
     quantity = Column(Integer, nullable=False)
     
-    bookings = relationship('Bookings', backref='room')
+    bookings = relationship('Bookings', back_populates='room')
+    hotel = relationship('Hotels', back_populates='rooms')
+    
+    def __str__(self) -> str:
+        return f"Комната - {self.name}"

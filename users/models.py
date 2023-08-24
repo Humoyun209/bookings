@@ -1,3 +1,4 @@
+from sqladmin import ModelView
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -10,4 +11,7 @@ class Users(Base):
     email = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
     
-    bookings = relationship('Bookings', backref='user')
+    bookings = relationship('Bookings', back_populates='user')
+    
+    def __str__(self) -> str:
+        return f'Пользователь - {self.email}'

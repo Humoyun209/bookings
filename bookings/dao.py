@@ -1,6 +1,6 @@
-from datetime import date
+from datetime import date, datetime
 
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from fastapi import status
 
 from app.bookings.models import Bookings
@@ -11,6 +11,7 @@ from app.hotels.rooms.dao import RoomsDAO
 from app.hotels.rooms.models import Rooms
 
 from sqlalchemy import between, func, or_, select, and_, update
+from sqlalchemy.orm import joinedload
 
 
 def get_left_rooms(date_from: date, date_to: date):
@@ -40,7 +41,10 @@ class BookingsDAO(BaseDAO):
     @classmethod
     async def create_booking_db(cls, date_from: date, date_to: date, room_id: int, user_id: int) -> Bookings:
         async with async_session_maker() as session:
+            if date_from < datetime.now().date():
+                return None
             left_rooms = get_left_rooms(date_from, date_to) 
+            print(date_from)
             
             query = select(Rooms.id, Rooms.price, func.coalesce(Rooms.quantity - left_rooms.c.cnt_bk, Rooms.quantity).\
                             label('empty_rooms')).select_from(Rooms).join(left_rooms, left_rooms.c.room_id ==Rooms.id, isouter=True)
@@ -67,19 +71,23 @@ class BookingsDAO(BaseDAO):
             return booking
         
     @classmethod
-    async def update_booking(cls, booking_id: int, **kwargs):
+    async def update_booking(cls, booking_id: int, room_id: int, **kwargs):
         async with async_session_maker() as session:
-            booking = await cls.get_one_data(model_id=booking_id)
-            # room = await RoomsDAO.get_one_data(model_id=booking.room_id)
-            # query = select(Hotels).where(Hotels.id == room.hotel_id)
-            # hotel = await session.execute(query)
-            # return hotel.scalar_one_or_none()
             
-            upt_data = kwargs
-            if kwargs.get('date_from') == None:
-                upt_data['date_from'] = booking.date_from
-            if kwargs.get('date_to') == None:
-                upt_data['date_to'] = booking.date_to
+            booking = await cls.get_one_data(model_id=booking_id)
+            
+            query1 = select(Hotels.id).select_from(Hotels).\
+                    join(Rooms, Rooms.hotel_id == Hotels.id).\
+                    join(Bookings, Bookings.room_id == Rooms.id).\
+                    where(Bookings.id == booking_id)
+                    
+            hotel_id = await session.execute(query1)
+            
+            query2 = select(Rooms.id).where(Rooms.hotel_id == hotel_id.scalar())
+            
+            room_ids = await session.execute(query2)
+            if room_id not in room_ids.scalars().all():
+                return None
             
             query = update(Bookings).where(Bookings.id == booking_id).values(
                 **cls.get_update_data(booking, **kwargs)
@@ -87,5 +95,9 @@ class BookingsDAO(BaseDAO):
             
             result = await session.execute(query)
             await session.commit()
+
             return result.scalar()
-            
+        
+    
+        
+        

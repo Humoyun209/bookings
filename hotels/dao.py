@@ -1,10 +1,11 @@
 from datetime import date
 from app.bookings.dao import get_left_rooms
+from app.bookings.models import Bookings
 from app.dao.base import BaseDAO
 from app.hotels.models import Hotels
 from app.database import async_session_maker
 
-from sqlalchemy import func, select
+from sqlalchemy import between, func, or_, and_, select
 
 from app.hotels.rooms.models import Rooms
 
@@ -12,10 +13,14 @@ from app.hotels.rooms.models import Rooms
 class HotelsDAO(BaseDAO):
     model = Hotels
     
-    async def get_all_rooms_with_staticstics(date_from: date, date_to: date):
+    async def get_all_rooms_with_staticstics(date_from: date, date_to: date, location: str):
         async with async_session_maker() as session:
-            left_rooms = get_left_rooms(date_from, date_to)
-            
+            left_rooms = select(Rooms.id.label('room_id'), func.count(Bookings.room_id).label('cnt_bk')).select_from(Rooms)\
+                            .join(Bookings, Bookings.room_id == Rooms.id, isouter=True).where (or_(
+                                and_(date_to > Bookings.date_to, date_from < Bookings.date_from),
+                                between(date_from, Bookings.date_from, Bookings.date_to),
+                                between(date_to, Bookings.date_from, Bookings.date_to),
+                            )).group_by(Rooms.id).order_by(Rooms.id).cte('left_rooms')
             query = select(Hotels.id, Hotels.name, Hotels.location, Hotels.services, Hotels.rooms_quantity, func.coalesce(
                 Rooms.quantity - left_rooms.c.cnt_bk, Rooms.quantity).label('empty_rooms')
             ).select_from(Rooms).join(left_rooms, left_rooms.c.room_id == Rooms.id, isouter=True)\
@@ -44,5 +49,5 @@ class HotelsDAO(BaseDAO):
                     'rooms_quantity': row[4],
                     'empty_rooms': row[5]
                 })
-               
+            result = list(filter(lambda hotel: location in hotel['location'], result))
             return result
