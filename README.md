@@ -1,12 +1,12 @@
 ### Project for booking
 
-** The project was created using FastAPI for hotels. This project has the following features: **
+**The project was created using FastAPI for hotels. This project has the following features:**
 
 * Authorization
 * Booking rooms for clients
 * Search engine and various filters
 
-** The following technologies were used in the project: **
+**The following technologies were used in the project:**
 
 * As a postgreSQL database (asyncpg)
 * As an ORM SQLAlchemy
@@ -14,7 +14,7 @@
 * SQLAdmin administration panel
 * An asynchronous version of pytest was used for testing the API
 
-** To launch applications: **
+**To launch applications:**
 
-> git clone git@github.com:Humoyun209/bookings.git
+> git clone git@github.com:Humoyun209/bookings.git <br>
 > pip install -r requirements.txt
