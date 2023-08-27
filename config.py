@@ -1,12 +1,17 @@
+from typing import Literal
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    MODE: Literal['DEV', 'TEST', 'PROD']
+    
     DB_HOST: str
     DB_PORT: int
     DB_USER: str
     DB_PASSWORD: str
     DB_NAME: str
+    
+    TEST_DB_NAME: str
     
     SMTP_HOST: str
     SMTP_PORT: int

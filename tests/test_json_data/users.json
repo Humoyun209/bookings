@@ -1,0 +1,22 @@
+[
+    {
+      "hashed_password": "$2b$12$kvDWXZaGU/ZmY41DA50obO9sn7h.0wRnSyz0JqiqJKKumL6OJM1Ia",
+      "email": "humoyun209@gmail.com",
+      "id": 3
+    },
+    {
+      "hashed_password": "$2b$12$1cF0nHeaD9jW6HUrIyu.Ou6dJNseVpIdfNIq2R6gCrmMGC97LBWvq",
+      "email": "natediaz209@gmail.com",
+      "id": 4
+    },
+    {
+      "hashed_password": "$2b$12$C48yXU/GLONVljehKbN3q.Y.itRU1QDKCWJtNqVO3e5dAfuIiyZGm",
+      "email": "h.ahmedov209@gmail.com",
+      "id": 5
+    },
+    {
+      "hashed_password": "$2b$12$fpZJ5d3jgbaEAAOjh.m5hej7bLgM5rns6OdD59axO3RydQeVcyaGq",
+      "email": "ufcuzahmedov@gmail.com",
+      "id": 6
+    }
+  ]

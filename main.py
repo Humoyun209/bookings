@@ -1,11 +1,16 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from app.bookings.dao import BookingsDAO
+from app.dao.base import BaseDAO
 
 from app.database import engine
 from app.bookings.router import router as bookings_router
 from app.admin.admin import UserAdmin, BookingsAdmin, HotelsAdmin, RoomsAdmin, ImagesAdmin
 from app.admin.auth import authentication_backend
+from app.hotels.dao import HotelsDAO
+from app.hotels.rooms.dao import RoomsDAO
+from app.users.dao import UsersDao
 from app.users.router import router as users_router
 from app.hotels.router import router as hotels_router
 from app.hotels.rooms.router import router as rooms_roter
@@ -55,3 +60,21 @@ app.add_middleware(
     allow_headers=['Content-Type', 'Set-Cookie', 'Access-Control-Allow-Headers',
                    'Access-Control-Allow-Origin', 'Authorization']
 )
+
+
+
+@app.get('/all_rooms')
+async def get_all_rooms():
+    return await RoomsDAO.get_all_data()
+
+@app.get('/all_bookings')
+async def get_all_rooms():
+    return await BookingsDAO.get_all_data()
+
+@app.get('/all_users')
+async def get_all_users():
+    return await UsersDao.get_all_data()
+
+@app.get('/all_hotels')
+async def get_all_hotels():
+    return await HotelsDAO.get_all_data()
