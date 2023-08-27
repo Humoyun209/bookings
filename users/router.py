@@ -28,6 +28,7 @@ async def login_user(user_data: SUserRegister, response: Response) -> dict:
     if user is None:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE)
     access_token = create_access_token({'sub': str(user.id)})
+    response.headers.append('access_token', access_token)
     response.set_cookie('access_token', access_token, httponly=True) 
     return {"access_token": access_token}
 

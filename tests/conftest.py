@@ -1,5 +1,6 @@
 import asyncio
 import json
+from fastapi import Request, Response
 import pytest
 from datetime import datetime
 from sqlalchemy import insert
@@ -11,6 +12,7 @@ from app.database import async_session_maker
 from app.main import app as fastapi_app
 
 from app.bookings.models import Bookings
+from app.users.dependencies import get_current_user
 from app.users.models import Users
 from app.hotels.models import Hotels, Images
 from app.hotels.rooms.models import Rooms
@@ -39,7 +41,7 @@ async def prepare_database():
         booking['date_to'] = datetime.strptime(booking['date_to'], '%Y-%m-%d')
         
     async with async_session_maker() as session:
-        bookings = insert(Bookings).values(add_bookings)
+        # bookings = insert(Bookings).values(add_bookings)
         hotels = insert(Hotels).values(load_json_to_db('hotels'))
         rooms = insert(Rooms).values(load_json_to_db('rooms'))
         users = insert(Users).values(load_json_to_db('users'))
@@ -47,7 +49,7 @@ async def prepare_database():
         await session.execute(users)
         await session.execute(hotels)
         await session.execute(rooms)
-        await session.execute(bookings)
+        # await session.execute(bookings)
         
         await session.commit()
     print('\n start .... \n')
@@ -70,3 +72,14 @@ async def ac():
 async def session():
     async with async_session_maker() as ses:
         yield ses
+
+
+@pytest.fixture(scope="session")
+async def authenticate_ac():
+    async with AsyncClient(app=fastapi_app, base_url='http://test') as as_cl:
+        await as_cl.post('/auth/login', json={
+            "email": "humoyun209@gmail.com",
+            "password": "humo6050"
+        })
+        assert as_cl.cookies.get("access_token") is not None
+        yield as_cl

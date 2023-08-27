@@ -3,6 +3,8 @@ from pydantic import EmailStr
 
 import pytest
 
+from app.users.dao import UsersDao
+
 
 @pytest.mark.parametrize("email,password,status", [
     ('ufc@mail.ru', 'natediaz', 201),
@@ -16,6 +18,7 @@ async def test_register_user(email: EmailStr,
     response = await ac.post('/auth/register', json={
         'email': email,
         'password': password})
+    print(ac.cookies)
     assert response.status_code == status
 
 
@@ -32,3 +35,16 @@ async def test_login_user(email: EmailStr,
         'email': email,
         'password': password})
     assert response.status_code == status
+    
+
+@pytest.mark.parametrize("email",[
+                         'humoyun209@gmail.com',
+                         'h.ahmedov209@gmail.com',
+                         'error@gmail.com'])
+async def test_get_one_user(email: EmailStr):
+    user = await UsersDao.get_one_data_by_filter(email=email)
+    if user is None:
+        assert True
+        return 
+        
+    assert user.email == email

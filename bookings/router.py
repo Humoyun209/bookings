@@ -13,12 +13,12 @@ router: APIRouter = APIRouter(prefix='/bookings', tags=['Бронировани�
 
 
 @router.get("")
-async def get_boking(user: Users = Depends(get_current_user)):
+async def get_bokings(user: Users = Depends(get_current_user)):
     """all Bookings"""
     return await BookingsDAO.get_all_data(user_id=user.id)
     
 
-@router.post('/create_boking')
+@router.post('/create_boking', status_code=201)
 async def create_boking(date_from: date, date_to: date, room_id: int,
                          user: Users = Depends(get_current_user)):
     result =  await BookingsDAO.create_booking_db(
@@ -32,7 +32,7 @@ async def create_boking(date_from: date, date_to: date, room_id: int,
                             detail='Ошибка при вводе даты')
         
     booking_dict = {'date_from': result.date_from, 'date_to': result.date_to}
-    send_message.delay(booking_dict, user.email)
+    # send_message.delay(booking_dict, user.email)
     return result
     
 

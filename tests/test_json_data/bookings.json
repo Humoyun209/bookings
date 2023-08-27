@@ -3,7 +3,7 @@
       "room_id": 2,
       "date_from": "2023-09-09",
       "user_id": 4,
-      "id": 1,
+      "id": 3,
       "date_to": "2023-10-01",
       "price": 22450
     },
@@ -11,7 +11,7 @@
       "room_id": 2,
       "date_from": "2023-11-25",
       "user_id": 3,
-      "id": 2,
+      "id": 4,
       "date_to": "2023-12-01",
       "price": 22450
     },
@@ -19,7 +19,7 @@
       "room_id": 1,
       "date_from": "2023-09-25",
       "user_id": 3,
-      "id": 3,
+      "id": 5,
       "date_to": "2023-10-03",
       "price": 24500
     },
@@ -27,7 +27,7 @@
       "room_id": 1,
       "date_from": "2023-09-30",
       "user_id": 4,
-      "id": 4,
+      "id": 6,
       "date_to": "2023-10-08",
       "price": 24500
     }
