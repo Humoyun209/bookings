@@ -1,10 +1,10 @@
 import shutil
-from fastapi import APIRouter, HTTPException, UploadFile, status
+
+from fastapi import (APIRouter, BackgroundTasks, HTTPException, UploadFile,
+                     status)
+
 from app.hotels.images.dao import ImagesDAO
 from app.tasks.tasks import process_pic
-
-from fastapi import BackgroundTasks
-
 
 router = APIRouter(prefix='/hotels/images', tags=['Загрузка изображений'])
 back_tasks = BackgroundTasks

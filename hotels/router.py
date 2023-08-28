@@ -1,11 +1,11 @@
 import asyncio
 from datetime import date
 from typing import Annotated
-from fastapi import APIRouter, Depends
-from app.hotels.dao import HotelsDAO
 
+from fastapi import APIRouter, Depends
 from fastapi_cache.decorator import cache
 
+from app.hotels.dao import HotelsDAO
 
 router = APIRouter(prefix="/hotel", tags=["Отелы"])
 

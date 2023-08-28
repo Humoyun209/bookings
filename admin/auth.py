@@ -1,6 +1,6 @@
 from typing import Optional, Union
-from fastapi import HTTPException
 
+from fastapi import HTTPException
 from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
 from starlette.responses import RedirectResponse

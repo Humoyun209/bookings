@@ -2,10 +2,11 @@ import smtplib
 from email.message import EmailMessage
 from pathlib import Path
 
+from PIL import Image
 from pydantic import EmailStr
+
 from app.config import settings
 from app.tasks.celery import celery
-from PIL import Image
 
 
 def get_mail_text(booking: dict, email_to: EmailStr) -> EmailMessage:

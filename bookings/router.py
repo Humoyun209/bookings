@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.bookings.dao import BookingsDAO
@@ -7,7 +8,6 @@ from app.bookings.schemes import SBooking
 from app.tasks.tasks import get_mail_text, send_message
 from app.users.dependencies import get_current_user
 from app.users.models import Users
-
 
 router: APIRouter = APIRouter(prefix='/bookings', tags=['Бронирование'])
 

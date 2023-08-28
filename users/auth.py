@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
-from passlib.context import CryptContext
 
-from pydantic import EmailStr
 from jose import jwt
+from passlib.context import CryptContext
+from pydantic import EmailStr
+
 from app.config import settings
-
 from app.users.dao import UsersDao
-
 
 PWD_CONTEXT = CryptContext(schemes=['bcrypt'], deprecated='auto')
 

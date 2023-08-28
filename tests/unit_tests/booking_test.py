@@ -1,4 +1,5 @@
 from datetime import date, datetime, timedelta
+
 import pytest
 
 from app.bookings.dao import BookingsDAO

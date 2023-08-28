@@ -1,5 +1,7 @@
 from sqlalchemy import delete, insert, select
-from app.database import  async_session_maker
+from app.bookings.models import Bookings
+
+from app.database import async_session_maker
 
 
 class BaseDAO:
@@ -7,7 +9,7 @@ class BaseDAO:
     model = None
     
     @classmethod
-    async def insert_data(cls, **data) -> int:
+    async def insert_data(cls, **data) -> Bookings:
         """Insert data"""
         async with async_session_maker() as session:
             query = insert(cls.model).values(**data).returning(cls.model)

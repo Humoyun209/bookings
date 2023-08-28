@@ -1,7 +1,6 @@
+import pytest
 from httpx import AsyncClient
 from pydantic import EmailStr
-
-import pytest
 
 from app.users.dao import UsersDao
 

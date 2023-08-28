@@ -1,10 +1,11 @@
 import json
+
 from fastapi import APIRouter, HTTPException, Response, status
 
-from app.users.auth import authenticate_user, get_hashed_password, create_access_token
+from app.users.auth import (authenticate_user, create_access_token,
+                            get_hashed_password)
 from app.users.dao import UsersDao
 from app.users.schemes import SUserRegister
-
 
 router = APIRouter(prefix='/auth', tags=['Регистрация и авторизация'])
 
