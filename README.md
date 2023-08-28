@@ -2,7 +2,8 @@
 
 **To run applications:**
 
-> git clone git@github.com:Humoyun209/bookings.git <br><br>
+> git clone git@github.com:Humoyun209/bookings.git
+> 
 > pip install -r requirements.txt
 
 **The project was created using FastAPI for hotels. This project has the following features:**
