@@ -20,7 +20,7 @@ async def create_image(title: str, files: UploadFile, hotel_id: int, is_main: bo
         
         
         back_tasks.add_task(process_pic, path_name)
-        # process_pic.delay(path_name)
+        process_pic.delay(path_name)
         
         return {"Success": f"Add image successfully. id = {image_id}"}
     except Exception as e:

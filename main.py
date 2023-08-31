@@ -1,4 +1,7 @@
-from fastapi import FastAPI
+import time
+
+import sentry_sdk
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
@@ -11,7 +14,6 @@ from app.admin.admin import (BookingsAdmin, HotelsAdmin, ImagesAdmin,
 from app.admin.auth import authentication_backend
 from app.bookings.dao import BookingsDAO
 from app.bookings.router import router as bookings_router
-from app.dao.base import BaseDAO
 from app.database import engine
 from app.hotels.dao import HotelsDAO
 from app.hotels.images.router import router as images_router
@@ -20,6 +22,7 @@ from app.hotels.rooms.router import router as rooms_roter
 from app.hotels.router import router as hotels_router
 from app.users.dao import UsersDao
 from app.users.router import router as users_router
+from app.logger import logger
 
 app = FastAPI()
 app.mount("/media", StaticFiles(directory="app/media"), name="static")
@@ -44,10 +47,17 @@ admin.add_view(ImagesAdmin)
 async def startup():
     redis = aioredis.from_url("redis://localhost:6379")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
+    
+
+sentry_sdk.init(
+    dsn="https://4d5eb02a97be486d0138b2b178ff61f0@o4505788805283840.ingest.sentry.io/4505788810395648",
+    traces_sample_rate=1.0,
+)
 
 
 origins = [
     "http://localhost:3000",
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
@@ -83,3 +93,15 @@ async def get_all_users():
 @app.get("/all_hotels")
 async def get_all_hotels():
     return await HotelsDAO.get_all_data()
+
+
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    logger.info("Handling time", extra={
+        "process_time": round(process_time, 4)
+    })
+    return response

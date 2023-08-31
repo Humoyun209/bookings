@@ -2,7 +2,7 @@ from datetime import date, datetime
 from typing import Optional
 
 from fastapi import HTTPException, status
-from sqlalchemy import and_, between, func, or_, select, update, delete
+from sqlalchemy import and_, between, func, or_, select, update
 
 from app.bookings.models import Bookings
 from app.dao.base import BaseDAO
@@ -52,7 +52,6 @@ class BookingsDAO(BaseDAO):
             if date_from < datetime.now().date():
                 return None
             left_rooms = get_left_rooms(date_from, date_to)
-            print(date_from)
 
             query = (
                 select(
@@ -68,7 +67,7 @@ class BookingsDAO(BaseDAO):
 
             data = await session.execute(query)
             result = list(map(list, list(data.iterator)))
-            booking = cnt_rooms = 0
+            booking = cnt_rooms = room_price = 0
 
             for ls in result:
                 if ls[0] == room_id:
