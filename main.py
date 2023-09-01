@@ -22,7 +22,6 @@ from app.hotels.rooms.router import router as rooms_roter
 from app.hotels.router import router as hotels_router
 from app.users.dao import UsersDao
 from app.users.router import router as users_router
-from app.logger import logger
 
 app = FastAPI()
 app.mount("/media", StaticFiles(directory="app/media"), name="static")
@@ -95,13 +94,12 @@ async def get_all_hotels():
     return await HotelsDAO.get_all_data()
 
 
-
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    start_time = time.time()
-    response = await call_next(request)
-    process_time = time.time() - start_time
-    logger.info("Handling time", extra={
-        "process_time": round(process_time, 4)
-    })
-    return response
+# @app.middleware("http")
+# async def add_process_time_header(request: Request, call_next):
+#     start_time = time.time()
+#     response = await call_next(request)
+#     process_time = time.time() - start_time
+#     logger.info("Handling time", extra={
+#         "process_time": round(process_time, 4)
+#     })
+#     return response

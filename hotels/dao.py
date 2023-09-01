@@ -3,7 +3,6 @@ import time
 
 from sqlalchemy import and_, between, func, or_, select
 
-from app.logger import logger
 from app.bookings.dao import get_left_rooms
 from app.bookings.models import Bookings
 from app.dao.base import BaseDAO
@@ -69,11 +68,6 @@ class HotelsDAO(BaseDAO):
                 else:
                     doubles.append(row[0])
                     without_doubles.append(row)
-            try:
-                data = open('aaa.txt', mode='r')
-                print(data.read())
-            except FileNotFoundError:
-                logger.error("Error on reading file", )
 
             for row in without_doubles:
                 result.append(

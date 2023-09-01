@@ -7,10 +7,10 @@ from fastapi_cache.decorator import cache
 
 from app.hotels.dao import HotelsDAO
 
-router = APIRouter(prefix="/hotel", tags=["Отелы"])
+router = APIRouter(prefix="/hotels", tags=["Отелы"])
 
 
-@router.get('/hotels') 
+@router.get('') 
 # @cache(expire=300)
 async def get_hotels(location: str, date_from: date, date_to: date):
     result = await HotelsDAO.get_all_rooms_with_staticstics(date_from, date_to, location)

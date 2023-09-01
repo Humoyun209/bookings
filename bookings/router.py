@@ -18,7 +18,7 @@ async def get_bokings(user: Users = Depends(get_current_user)):
     return await BookingsDAO.get_all_data(user_id=user.id)
     
 
-@router.post('/create_boking', status_code=201)
+@router.post('/create_booking', status_code=201)
 async def create_boking(date_from: date, date_to: date, room_id: int,
                          user: Users = Depends(get_current_user)):
     result =  await BookingsDAO.create_booking_db(
