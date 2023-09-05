@@ -1,7 +1,8 @@
 import time
+from typing import Annotated
 
 import sentry_sdk
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
@@ -9,8 +10,13 @@ from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from sqladmin import Admin
 
-from app.admin.admin import (BookingsAdmin, HotelsAdmin, ImagesAdmin,
-                             RoomsAdmin, UserAdmin)
+from app.admin.admin import (
+    BookingsAdmin,
+    HotelsAdmin,
+    ImagesAdmin,
+    RoomsAdmin,
+    UserAdmin,
+)
 from app.admin.auth import authentication_backend
 from app.bookings.dao import BookingsDAO
 from app.bookings.router import router as bookings_router
@@ -46,7 +52,7 @@ admin.add_view(ImagesAdmin)
 async def startup():
     redis = aioredis.from_url("redis://localhost:6379")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
-    
+
 
 sentry_sdk.init(
     dsn="https://4d5eb02a97be486d0138b2b178ff61f0@o4505788805283840.ingest.sentry.io/4505788810395648",
@@ -92,6 +98,21 @@ async def get_all_users():
 @app.get("/all_hotels")
 async def get_all_hotels():
     return await HotelsDAO.get_all_data()
+
+
+@app.get("/server/{user_id}")
+def get_user(
+    user_id: int,
+    username: Annotated[str | None, Query(max_length=32, min_length=6)] = None,
+    first_name: str | None = None,
+    others: Annotated[list[str] | None, Query()] = None
+):
+    print(others)
+    return {
+        "user_id": user_id,
+        "username": username or "Username is Not found",
+        "first_name": first_name or "First name is not found",
+    }
 
 
 # @app.middleware("http")

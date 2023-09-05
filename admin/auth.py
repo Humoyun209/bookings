@@ -8,6 +8,7 @@ from starlette.responses import RedirectResponse
 from app.config import settings
 from app.users.auth import authenticate_user, create_access_token
 from app.users.dependencies import get_current_user
+from app.users.models import Users
 
 
 class AdminAuth(AuthenticationBackend):
@@ -29,11 +30,11 @@ class AdminAuth(AuthenticationBackend):
         try:
             token = request.session.get("token")
             try:
-                user = await get_current_user(token=token)
-            except HTTPException:
-                user = None
-
-            if not token or user is None:
+                user: Users = await get_current_user(token=token)
+            except Exception:
+                raise HTTPException(status_code=403, detail='Информация не доступна')
+                
+            if token is None or user.is_admin != True:
                 return RedirectResponse(request.url_for("admin:login"), status_code=302)
         except Exception:
             return RedirectResponse(request.url_for("admin:login"), status_code=302)

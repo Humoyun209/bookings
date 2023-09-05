@@ -19,7 +19,7 @@ async def create_image(title: str, files: UploadFile, hotel_id: int, is_main: bo
             image_id = await ImagesDAO.insert_data(name=f'{title}.webp', is_main=is_main, hotel_id=hotel_id)
         
         
-        back_tasks.add_task(process_pic, path_name)
+        # back_tasks.add_task(process_pic, path_name)
         process_pic.delay(path_name)
         
         return {"Success": f"Add image successfully. id = {image_id}"}

@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException, Response, status
 from app.users.auth import (authenticate_user, create_access_token,
                             get_hashed_password)
 from app.users.dao import UsersDao
+from app.users.models import Users
 from app.users.schemes import SUserRegister
 
 router = APIRouter(prefix='/auth', tags=['Регистрация и авторизация'])
@@ -24,7 +25,7 @@ async def register_user(user_data: SUserRegister) -> Response:
 
 @router.post('/login', status_code=200)
 async def login_user(user_data: SUserRegister, response: Response) -> dict:
-    user = await authenticate_user(password=user_data.password,
+    user: Users = await authenticate_user(password=user_data.password,
                                    email=user_data.email)
     if user is None:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE)

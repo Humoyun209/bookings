@@ -5,6 +5,7 @@ from jose import JWTError, jwt
 
 from app.config import settings
 from app.users.dao import UsersDao
+from app.users.models import Users
 
 
 def get_token(request: Request):
@@ -15,7 +16,7 @@ def get_token(request: Request):
     return token
 
 
-async def get_current_user(token: str = Depends(get_token)):
+async def get_current_user(token: str = Depends(get_token)) -> Users | HTTPException:
     try:
         payload = jwt.decode(
             token=token,
@@ -38,3 +39,4 @@ async def get_current_user(token: str = Depends(get_token)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Пользователь таким идентификатором не существует")
     return user
+    

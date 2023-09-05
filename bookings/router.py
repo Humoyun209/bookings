@@ -48,7 +48,7 @@ async def delete_booking(booking_id: int,
 
 @router.put('/update_booking/{booking_id}')
 async def update_boking(booking_id: int, date_from: Optional[date] = None, date_to: Optional[date] = None,
-                        room_id: Optional[int] = None,user: Users = Depends(get_current_user)):
+                        room_id: Optional[int] = None, user: Users = Depends(get_current_user)):
     booking = await BookingsDAO.get_one_data_by_filter(id=booking_id, user_id=user.id)
     if booking is not None:
         result = await BookingsDAO.update_booking(booking_id=booking_id,

@@ -5,7 +5,7 @@ from app.database import async_session_maker
 
 
 class BaseDAO:
-    """Base Data Axios Object"""
+    """Base Axios Data Object"""
     model = None
     
     @classmethod
